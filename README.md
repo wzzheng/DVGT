@@ -1,26 +1,39 @@
 <div align="center">
 <h1>DVGT: Driving Visual Geometry Transformer</h1>
-</div>
 
-### [Paper](https://arxiv.org/abs/2512.xxxxx)  | [Project Page](https://wzzheng.net/DVGT)
+<a href="https://arxiv.org/abs/2512.xxxxx"><img src="https://img.shields.io/badge/arXiv-2512.xxxxx-b31b1b" alt="arXiv"></a>
+<a href="https://wzzheng.net/DVGT"><img src="https://img.shields.io/badge/Project_Page-green" alt="Project Page"></a>
+<a href='https://huggingface.co/RainyNight/DVGT'><img src='https://img.shields.io/badge/🤗%20Hugging%20Face-DVGT-ffd21e'></a>
 
->DVGT: Driving Visual Geometry Transformer
 
 >[Sicheng Zuo](https://zuosc19.github.io/)<sup>\*</sup>, [Zixun Xie](https://github.com/rainyNighti)<sup>\*</sup>, [Wenzhao Zheng](https://wzzheng.net/)<sup>*</sup>$\ddagger$,  Shaoqing Xu $\dagger$, Fang Li, Shengyin Jiang, Long chen, Zhi-Xin Yang, [Jiwen Lu](http://ivg.au.tsinghua.edu.cn/Jiwen_Lu/)
+</div>
 
 <sup>*</sup> Equal contributions. $\dagger$ Project leader.  $\ddagger$ Research advisor.
 
-
 **DVGT**, a universal visual geometry transformer for autonomous driving, directly predicts metric-scaled global 3D point maps from a sequence of unposed multi-view images, eliminating the need for post-alignment with external data. 
 
-## Updates
+![teaser](./assets/figure_1.jpg)
 
-- [Dec 19, 2025] Inference code and checkpoint for visualization is now available. 
+## News
+- **[2025/12/19]** We have released the paper, inference code, and visualization checkpoints.
 
+## Demo
+<p align="center">
+<video src="./assets/demo.mp4" width="600px" controls autoplay loop muted>
+</video>
+</p>
 
 ## Overview
 
 DVGT proposes a universal framework for driving geometry perception. Unlike conventional driving models that are tightly coupled to specific sensor setups or require ground-truth poses, our model leverages spatial-temporal attention to process unposed image sequences directly. By decoding global geometry in the ego-coordinate system, DVGT achieves metric-scaled dense reconstruction without LiDAR alignment, offering a robust solution that adapts seamlessly to diverse vehicles and camera configurations.
+
+## Experimental Results
+DVGT significantly outperforms existing models on various scenarios. **Quantitative comparison of 3D scene reconstruction.** Our method (red) demonstrates superior accuracy ($\delta < 1.25$ for ray depth estimation) across all evaluated datasets.
+
+<p align="center">
+<img src="./assets/figure_2.jpg" alt="Radar Chart Performance" width="45%">
+</p>
 
 
 ## Quick Start
@@ -29,7 +42,7 @@ Firstly, clone this repository to your local machine, and install the dependenci
 We tested the code with CUDA 12.8, python3.11 and torch 2.8.0.
 
 ```bash
-git clone https://github.com/wzzheng/dvgt.git
+git clone https://github.com/wzzheng/DVGT.git
 cd dvgt
 
 conda create -n dvgt python=3.11
@@ -148,6 +161,12 @@ Our code is based on the following brilliant repositories:
 [Pi3](https://github.com/yyfz/Pi3)
 
 Many thanks to these authors!
+
+## TODO
+
+- [x] Paper, inference code, and pre-trained weights (for visualization).
+- [ ] Training suite: includes training code, evaluation scripts, and the data preparation pipeline.
+- [ ] Dataset release: comprehensive datasets for training and testing.
 
 ## Citation
 
