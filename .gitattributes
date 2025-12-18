@@ -1,0 +1,4 @@
+resources/architecture_v4.png filter=lfs diff=lfs merge=lfs -text
+resources/comparison filter=lfs diff=lfs merge=lfs -text
+resources/qualitative filter=lfs diff=lfs merge=lfs -text
+resources/teaser_video.mp4 filter=lfs diff=lfs merge=lfs -text

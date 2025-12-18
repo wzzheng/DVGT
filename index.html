@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+    content="We propose Driving Visual Geometry Transformer (DVGT), a universal geometry model that directly predicts metric-scaled dense 3D point maps and ego poses from a sequence of unposed multi-view visual inputs, eliminating the need for post-alignment.">
+  <meta name="keywords" content="DVGT, Autonomous Driving, Point map, 3D reconstruction">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DVGT: Driving Visual Geometry Transformer</title>
+
+
+  <meta property="og:title" content="DVGT: Driving Visual Geometry Transformer" />
+  <meta property="og:description"
+    content="We propose Driving Visual Geometry Transformer (DVGT), a universal geometry model that directly predicts metric-scaled dense 3D point maps and ego poses from a sequence of unposed multi-view visual inputs, eliminating the need for post-alignment." />
+  <!-- Twitter automatically scrapes this. Go to https://cards-dev.twitter.com/validator?
+      if you update and want to force Twitter to re-scrape. -->
+  <meta property="twitter:card" content="summary" />
+  <meta property="twitter:title" content="DVGT: Driving Visual Geometry Transformer" />
+  <meta property="twitter:description"
+    content="We propose Driving Visual Geometry Transformer (DVGT), a universal geometry model that directly predicts metric-scaled dense 3D point maps and ego poses from a sequence of unposed multi-view visual inputs, eliminating the need for post-alignment." />
+  <!-- <meta property="twitter:image"         content="https://3dmagicpony.github.io/resources/overview.jpg" /> -->
+
+  <!-- MathJax library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-TSQGH8Q0WV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-TSQGH8Q0WV');
+  </script> -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title" style="font-size: 2rem;">DVGT: Driving Visual Geometry Transformer</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://zuosc19.github.io/">Sicheng Zuo</a><sup>1, *</sup>,
+              </span>
+              <span class="author-block">
+                <a href="#">Zixun Xie</a><sup>1, 2, 4, *</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://wzzheng.net/">Wenzhao Zheng</a><sup>1, *, &ddagger;</sup>,
+              </span>
+              <span class="author-block">
+                <a href="#">Shaoqing Xu</a><sup>2, &dagger;</sup>
+              </span>
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="#">Fang Li</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="#">Shengyin Jiang</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="#">Long Chen</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://www.fst.um.edu.mo/people/zxyang/">Zhi-Xin Yang</a><sup>3</sup>,
+              </span>
+              <span class="author-block">
+                <a href="http://ivg.au.tsinghua.edu.cn/Jiwen_Lu/">Jiwen Lu</a><sup>1</sup>
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Tsinghua University</span>&nbsp;&nbsp;
+              <span class="author-block"><sup>2</sup>Xiaomi EV</span>&nbsp;&nbsp;
+              <span class="author-block"><sup>3</sup>University of Macau</span>&nbsp;&nbsp;
+              <span class="author-block"><sup>4</sup>Peking University</span>
+            </div>
+
+            <div class="is-size-6 publication-authors" style="margin-top: 10px;">
+              <span class="author-block"><sup>*</sup>Equal Contributions</span>&nbsp;&nbsp;
+              <span class="author-block"><sup>&ddagger;</sup>Research Advisor</span>&nbsp;&nbsp;
+              <span class="author-block"><sup>&dagger;</sup>Project Leader</span>&nbsp;&nbsp;
+              <!-- <span class="author-block"><sup>✉</sup>Corresponding Author</span> -->
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2512.xxxxx" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <a href="https://github.com/wzzheng/DVGT"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <style>
+    .video-border {
+      display: inline-block;
+      padding: 2px; /* adjust thickness of your 'border' */
+      border-radius: 4px;
+      background: linear-gradient(45deg, #2193b0, #6dd5ed); /* try different gradient colors */
+    }
+    .video-border video {
+      display: block;
+      border: none;
+      border-radius: 4px; /* match the wrapper for a consistent look */
+    }
+  </style>
+
+  <style>
+    #teaser-video {
+      max-width: 85%;
+      margin: 0 auto;
+      display: block;
+      border: none; /* remove the solid border */
+      border-radius: 4px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    
+    #architecture-img {
+      width: 90%;
+      margin: 0 auto;
+      display: block;
+      border: none;
+      border-radius: 0; /* removed border radius */
+      box-shadow: none; /* removed box shadow */
+    }
+    
+    /* Enhanced style to further reduce space between buttons and teaser video */
+    .hero.teaser {
+      padding-top: 0;
+      margin-top: -3rem; /* Added negative margin to pull the teaser section up */
+    }
+    .hero.teaser .hero-body {
+      padding-top: 0; /* Reduced from 1rem to 0 */
+    }
+  </style>
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <video id="teaser-video" autoplay muted loop playsinline height="100%">
+          <source src="./resources/teaser_video.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section" style="padding-top: 1rem;">
+    <div class="container is-max-desktop">
+
+      <div class="columns is-centered">
+        <div class="column is-full-width has-text-centered">
+
+
+          <h2 class="title is-4" style="font-weight: 700;">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Perceiving and reconstructing 3D scene geometry from visual inputs is crucial for autonomous driving. 
+              However, it still lacks a driving-targeted dense geometry perception model that can adapt to different scenarios and camera configurations.
+              To bridge this gap, we propose a Driving Visual Geometry Transformer (<b>DVGT</b>), which reconstructs a global dense 3D point map from a sequence of unposed multi-view visual inputs.
+              We first extract visual features for each image using a DINO backbone, and employ alternating intra-view local attention, cross-view spatial attention, and cross-frame temporal attention to infer geometric relations across images.
+              We then use multiple heads to decode a global point map in the ego coordinate of the first frame and the ego poses for each frame.
+              Unlike conventional methods that rely on precise camera parameters, <b>DVGT</b> is free of explicit 3D geometric priors, enabling flexible processing of arbitrary camera configurations. 
+              <b>DVGT</b> directly predicts metric-scaled geometry from image sequences, eliminating the need for post-alignment with external sensors. 
+              Trained on a large mixture of driving datasets including nuScenes, OpenScene, Waymo, KITTI, and DDAD, <b>DVGT</b> significantly outperforms existing models on various scenarios.
+            </p>
+          </div>
+          <br>
+
+
+          <h2 class="title is-4" style="font-weight: 700;">Method</h2>
+          <div class="content has-text-justified">
+            <p>
+              DVGT leverages a DINO-pretrained ViT-L to tokenize input images, and augments them with learnable ego tokens for ego pose estimation. 
+              It then employs an alternating mechanism of intra-view local attention, cross-view spatial attention, and cross-frame temporal attention to effectively aggregate spatial-temporal features. 
+              Finally, a pose head regresses frame-wise ego poses, while a point map head decodes dense 3D point maps for each image.
+            </p>
+          </div>
+          <div class="content has-text-centered">
+            <!-- <img id="teaser" src="https://placehold.co/600x400" alt="Teaser image" style="width: 100%;"> -->
+            <img id="architecture-img" src="./resources/framework.png" alt="Architecture">
+          </div>
+          <br>
+
+
+          <h2 class="title is-4" style="font-weight: 700;">Qualitative Visualization</h2>
+          <div class="content has-text-centered">
+            <p>
+              Reconstruction of driving scenarios with DVGT. Click on any thumbnail below to view the 3D reconstruction.
+            </p>
+          </div>
+          <div class="model-viewer-container">
+            <model-viewer id="QualitativeResult"
+                          src="resources/qualitative/scene_01.glb"
+                          alt="3D Model"
+                          loading="eager"
+                          touch-action="none"
+                          exposure="0.35"
+                          zoom-sensitivity="0.2" camera-controls disable-tap 
+                          orientation="180deg 0deg 0deg"
+                          camera-target="0m 0m 0m"
+                          camera-orbit="0deg 0deg 0.1m"
+                          min-camera-orbit="auto auto 0.1m"
+                          max-camera-orbit="auto auto 0.2m"
+                          field-of-view="90deg"
+                          interaction-prompt="none" shadow-intensity="0" ar
+                          disable-shadow ar-modes="webxr scene-viewer quick-look"
+                          style="width: 90%; height: 90%; background: #ffffff; margin: 0 auto;">
+            </model-viewer>
+          </div>
+          <br>
+          <div class="content has-text-centered">
+            <div class="thumbnail-container" id="thumbnail-qualitative">
+              <img src="resources/qualitative/scene_01.jpg" data-glb="resources/qualitative/scene_01.glb">
+              <img src="resources/qualitative/scene_02.jpg" data-glb="resources/qualitative/scene_02.glb">
+              <img src="resources/qualitative/scene_03.jpg" data-glb="resources/qualitative/scene_03.glb">
+            </div>  
+          </div>  
+          <style>
+            .thumbnail-container img, .thumbnail-container video {
+              transition: all 0.3s ease;
+              border: 3px solid transparent;
+              cursor: pointer;
+            }
+            .thumbnail-selected {
+              transform: scale(1.2);
+              border: 6px solid #79b4f2 !important; 
+              box-shadow: 0 0 10px rgba(121, 180, 242, 0.5);
+              z-index: 10;
+              position: relative;
+            }
+            
+            /* New styles for responsive horizontal gallery */
+            .thumbnail-container {
+              display: flex;
+              flex-wrap: nowrap;
+              overflow-x: auto;
+              gap: 10px;
+              padding: 10px 0;
+              -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+              scrollbar-width: thin;
+              align-items: center;
+            }
+            
+            .thumbnail-container img, 
+            .thumbnail-container video {
+              flex: 0 0 auto;
+              width: auto;
+              height: 120px; /* Consistent height */
+              object-fit: cover;
+              max-width: none;
+            }
+            
+            /* Custom scrollbar styling */
+            .thumbnail-container::-webkit-scrollbar {
+              height: 6px;
+            }
+            
+            .thumbnail-container::-webkit-scrollbar-track {
+              background: #f1f1f1;
+              border-radius: 10px;
+            }
+            
+            .thumbnail-container::-webkit-scrollbar-thumb {
+              background: #888;
+              border-radius: 10px;
+            }
+            
+            .thumbnail-container::-webkit-scrollbar-thumb:hover {
+              background: #555;
+            }
+            
+            /* Adjust for smaller screens */
+            @media (max-width: 768px) {
+              .thumbnail-container img,
+              .thumbnail-container video {
+                height: 100px;
+              }
+            }
+          </style>
+          <script>
+            // The problem is here - you're trying to select an element that doesn't exist
+            // document.querySelector('#thumbnail-qualitative img[src="resources/qualitative/college.png"]').classList.add('thumbnail-selected');
+            
+            // Instead, select the first element that actually exists in your thumbnail container
+            document.addEventListener('DOMContentLoaded', function() {
+              // Select the first element in the thumbnail container (video or image)
+              const firstThumbnail = document.querySelector('#thumbnail-qualitative video, #thumbnail-qualitative img');
+              if (firstThumbnail) {
+                firstThumbnail.classList.add('thumbnail-selected');
+                // If it's a video, play it
+                if (firstThumbnail.tagName.toLowerCase() === 'video') {
+                  firstThumbnail.play();
+                }
+              }
+              
+              document.querySelectorAll('#thumbnail-qualitative img, #thumbnail-qualitative video').forEach(el => {
+                // Rest of your click handler code remains the same
+                el.addEventListener('click', () => {
+                  const glbSrc = el.getAttribute('data-glb');
+                  const modelViewer = document.getElementById('QualitativeResult');
+                  modelViewer.setAttribute('src', glbSrc);
+                  // modelViewer.cameraTarget = '0m 0m 0m'; 
+                  // modelViewer.cameraOrbit = "180deg 70deg auto";
+                  modelViewer.resetTurntableRotation(0);
+                  modelViewer.jumpCameraToGoal();
+
+                  // Remove selection class from all elements
+                  document.querySelectorAll('#thumbnail-qualitative img, #thumbnail-qualitative video').forEach(element => {
+                      element.classList.remove('thumbnail-selected');
+                  });
+                  
+                  // Add selection class to clicked element
+                  el.classList.add('thumbnail-selected');
+                  
+                  // Play video if it's a video element
+                  if (el.tagName.toLowerCase() === 'video') {
+                      el.play();
+                  }
+                  
+                  // Pause all other videos
+                  document.querySelectorAll('#thumbnail-qualitative video').forEach(video => {
+                      if (video !== el) {
+                          video.pause();
+                          video.currentTime = 0;
+                      }
+                  });
+                });
+              });
+            });
+          </script>
+
+          <br>
+
+          <h2 class="title is-4" style="font-weight: 700;">Qualitative Comparison</h2>
+          <div class="content has-text-justified" style="align-self: flex-start;">
+            <p>
+               DVGT significantly outperforms all other methods across various driving scenarios. 
+               Below we compare the dense 3D reconstruction results of <b>DVGT (Ours)</b> against <b>VGGT</b> and <b>MapAnything</b>.
+            </p>
+          </div>
+
+
+          <div class="model-container" id="model-compare-wrapper">
+            <!-- Model 1 Viewer with Label -->
+            <div class="model-wrapper-comparison">
+              <div class="model-label">DVGT</div>
+              <model-viewer id="modelViewerComparison1" loading="eager"
+                touch-action="pan-y" environment-image="legacy"
+                src="resources/comparison/dvgt/scene_01.glb"
+                zoom-sensitivity="0.2" camera-controls disable-tap exposure="0.35"
+                orientation="180deg 0deg 0deg" camera-target="0m 0m 0m" camera-orbit="0deg 0deg 0.1m"
+                min-camera-orbit="auto auto 0.1m" max-camera-orbit="auto auto 0.2m" 
+                interaction-prompt="none" shadow-intensity="0" ar
+                style="width: 100%; height: 100%;  background: #ffffff;">
+              </model-viewer>
+            </div>
+            <!-- Model 2 Viewer with Label -->
+            <div class="model-wrapper-comparison">
+              <div class="model-label">VGGT</div>
+              <model-viewer id="modelViewerComparison2"loading="eager"
+                touch-action="pan-y" environment-image="legacy"
+                src="resources/comparison/vggt/scene_01.glb"
+                zoom-sensitivity="0.2" camera-controls disable-tap exposure="0.35"
+                orientation="180deg 0deg 0deg" camera-target="0m 0m 0m" camera-orbit="0deg 0deg 0.1m"
+                min-camera-orbit="auto auto 0.1m" max-camera-orbit="auto auto 0.2m" 
+                interaction-prompt="none" shadow-intensity="0" ar
+                style="width: 100%; height: 100%; background: #ffffff;">
+              </model-viewer>
+            </div>
+            <!-- Model 3 Viewer with Label -->
+            <div class="model-wrapper-comparison">
+              <div class="model-label">MapAnything</div>
+              <model-viewer id="modelViewerComparison3"loading="eager"
+                touch-action="pan-y" environment-image="legacy"
+                src="resources/comparison/mapanything/scene_01.glb"
+                zoom-sensitivity="0.2" camera-controls disable-tap exposure="0.35"
+                orientation="180deg 0deg 0deg" camera-target="0m 0m 0m" camera-orbit="0deg 0deg 0.1m"
+                min-camera-orbit="auto auto 0.1m" max-camera-orbit="auto auto 0.2m" 
+                interaction-prompt="none" shadow-intensity="0" ar
+                style="width: 100%; height: 100%; background: #ffffff;">
+              </model-viewer>
+            </div>
+          </div>
+          <div class="hero-body" style="padding: 0;">
+            <div class="content has-text-centered">
+              <div class="thumbnail-container", id="thumbnail-comparison", data-selected-name="Colosseum">                
+                <img src="resources/comparison/assets/scene_01.jpg" name="scene_01">
+                <img src="resources/comparison/assets/scene_02.jpg" name="scene_02">
+                <img src="resources/comparison/assets/scene_03.jpg" name="scene_03">
+              </div>  
+            </div>  
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-4" style="font-weight: 700;">BibTeX</h2>
+      <pre><code>@inproceedings{zuo2025dvgt,
+        title={DVGT: Driving Visual Geometry Transformer},
+        author={Zuo, Sicheng and Xie, Zixun and Zheng, Wenzhao and Xu, Shaoqing and Li, Fang and Jiang, Shengyin and Chen, Long and Yang, Zhi-Xin and Lu, Jiwen},
+        booktitle={arXiv preprint arXiv:2512.xxxxx},
+        year={2025}
+      }</code></pre>
+    </div>
+  </section>
+
+  <section class="section" id="AuthorContributions">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-4" style="font-weight: 700;">Author Contributions</h2>
+      <div class="content has-text-justified is-size-6">
+        <p>
+          <strong>W. Zheng</strong> conceived the original idea and designed the method. 
+          <strong>S. Zuo</strong> and <strong>Z. Xie</strong> were responsible for the implementation of the model and writing the manuscript. 
+          <strong>W. Zheng</strong> also contributed to the writing and revision of the paper. 
+          <strong>S. Xu</strong> participated in the method discussion, assisted in writing the manuscript, and provided computing resources jointly with <strong>F. Li</strong>, <strong>S. Jiang</strong>, and <strong>L. Chen</strong>.
+          <strong>Z. Yang</strong> and <strong>J. Lu</strong> supervised the project.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This webpage template is adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>,
+              under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0 License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="static/js/comparison.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set initial camera positions for all model viewers
+      const initialModelViewers = [
+        document.getElementById('QualitativeResult'),
+        document.getElementById('modelViewerComparison1'),
+        document.getElementById('modelViewerComparison2'),
+        document.getElementById('modelViewerComparison3')
+      ];
+
+      // const CAMERA_ORBIT_Compare = "0deg 75deg 105%";
+      const CAMERA_ORBIT_Compare = "180deg auto auto";
+      
+      // Apply consistent initial camera settings to all model viewers
+      initialModelViewers.forEach(viewer => {
+        if (viewer) {
+          viewer.addEventListener('load', () => {
+            viewer.cameraOrbit = CAMERA_ORBIT_Compare;
+            // viewer.autoRotate = true; 
+            if (viewer.resetTurntableRotation) {
+              viewer.resetTurntableRotation(0);
+            }
+            viewer.jumpCameraToGoal();
+          });
+        }
+      });
+      
+      // Handle comparison thumbnails
+      const firstComparisonThumbnail = document.querySelector('#thumbnail-comparison video, #thumbnail-comparison img');
+      if (firstComparisonThumbnail) {
+        firstComparisonThumbnail.classList.add('thumbnail-selected');
+        // If it's a video, play it
+        if (firstComparisonThumbnail.tagName.toLowerCase() === 'video') {
+          firstComparisonThumbnail.play();
+        }
+      }
+      
+      document.querySelectorAll('#thumbnail-comparison img, #thumbnail-comparison video').forEach(el => {
+        el.addEventListener('click', () => {
+          const name = el.getAttribute('name');
+          
+          // Update model viewers with the corresponding GLB files
+          const modelViewer1 = document.getElementById('modelViewerComparison1');
+          const modelViewer2 = document.getElementById('modelViewerComparison2');
+          const modelViewer3 = document.getElementById('modelViewerComparison3');
+          
+          modelViewer1.setAttribute('src', `resources/comparison/dvgt/${name}.glb`);
+          modelViewer2.setAttribute('src', `resources/comparison/vggt/${name}.glb`);
+          modelViewer3.setAttribute('src', `resources/comparison/mapanything/${name}.glb`);
+          
+          // Reset camera positions
+          [modelViewer1, modelViewer2, modelViewer3].forEach(viewer => {
+            viewer.cameraOrbit = CAMERA_ORBIT_Compare;
+            if (viewer.resetTurntableRotation) {
+              viewer.resetTurntableRotation(0);
+            }
+            viewer.jumpCameraToGoal();
+          });
+
+          // Remove selection class from all elements
+          document.querySelectorAll('#thumbnail-comparison img, #thumbnail-comparison video').forEach(element => {
+            element.classList.remove('thumbnail-selected');
+          });
+          
+          // Add selection class to clicked element
+          el.classList.add('thumbnail-selected');
+          
+          // Play video if it's a video element
+          if (el.tagName.toLowerCase() === 'video') {
+            el.play();
+          }
+          
+          // Pause all other videos
+          document.querySelectorAll('#thumbnail-comparison video').forEach(video => {
+            if (video !== el) {
+              video.pause();
+              video.currentTime = 0;
+            }
+          });
+        });
+      });
+    });
+  </script>
+
+</body>
+
+</html>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const setupModelViewer = (id, pointSize) => {
+      const viewer = document.getElementById(id);
+      if (!viewer) return;
+
+      viewer.addEventListener('camera-change', (event) => {
+        const target = viewer.getCameraTarget();
+        if (Math.abs(target.x) > 0.001 || Math.abs(target.y) > 0.001 || Math.abs(target.z) > 0.001) {
+          viewer.cameraTarget = '0m 0m 0m';
+        }
+      });
+
+      const updateMaterial = () => {
+        const symbol = Object.getOwnPropertySymbols(viewer).find(x => x.description === 'scene');
+        if (!symbol) return;
+        
+        const scene = viewer[symbol];
+        if (!scene) return;
+
+        scene.traverse((node) => {
+          if (node.isPoints) {
+            node.material.size = pointSize;
+            node.material.sizeAttenuation = true;
+            node.material.needsUpdate = true;
+          }
+        });
+      };
+
+      if (viewer.loaded) {
+        updateMaterial();
+      } else {
+        viewer.addEventListener('load', updateMaterial);
+      }
+    };
+
+    setupModelViewer('QualitativeResult', 0.15);
+    setupModelViewer('modelViewerComparison1', 0.15); 
+    setupModelViewer('modelViewerComparison2', 0.15);
+    setupModelViewer('modelViewerComparison3', 0.15);
+  });
+</script>
