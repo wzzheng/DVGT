@@ -197,38 +197,6 @@
       <div class="columns is-centered">
         <div class="column is-full-width has-text-centered">
 
-
-          <h2 class="title is-4" style="font-weight: 700;">Abstract</h2>
-          <div class="content has-text-justified">
-            <p>
-              Perceiving and reconstructing 3D scene geometry from visual inputs is crucial for autonomous driving. 
-              However, it still lacks a driving-targeted dense geometry perception model that can adapt to different scenarios and camera configurations.
-              To bridge this gap, we propose a Driving Visual Geometry Transformer (<b>DVGT</b>), which reconstructs a global dense 3D point map from a sequence of unposed multi-view visual inputs.
-              We first extract visual features for each image using a DINO backbone, and employ alternating intra-view local attention, cross-view spatial attention, and cross-frame temporal attention to infer geometric relations across images.
-              We then use multiple heads to decode a global point map in the ego coordinate of the first frame and the ego poses for each frame.
-              Unlike conventional methods that rely on precise camera parameters, <b>DVGT</b> is free of explicit 3D geometric priors, enabling flexible processing of arbitrary camera configurations. 
-              <b>DVGT</b> directly predicts metric-scaled geometry from image sequences, eliminating the need for post-alignment with external sensors. 
-              Trained on a large mixture of driving datasets including nuScenes, OpenScene, Waymo, KITTI, and DDAD, <b>DVGT</b> significantly outperforms existing models on various scenarios.
-            </p>
-          </div>
-          <br>
-
-
-          <h2 class="title is-4" style="font-weight: 700;">Method</h2>
-          <div class="content has-text-justified">
-            <p>
-              DVGT leverages a DINO-pretrained ViT-L to tokenize input images, and augments them with learnable ego tokens for ego pose estimation. 
-              It then employs an alternating mechanism of intra-view local attention, cross-view spatial attention, and cross-frame temporal attention to effectively aggregate spatial-temporal features. 
-              Finally, a pose head regresses frame-wise ego poses, while a point map head decodes dense 3D point maps for each image.
-            </p>
-          </div>
-          <div class="content has-text-centered">
-            <!-- <img id="teaser" src="https://placehold.co/600x400" alt="Teaser image" style="width: 100%;"> -->
-            <img id="architecture-img" src="./resources/framework.png" alt="Architecture">
-          </div>
-          <br>
-
-
           <h2 class="title is-4" style="font-weight: 700;">Qualitative Visualization</h2>
           <div class="content has-text-centered">
             <p>
@@ -438,6 +406,58 @@
             </div>  
           </div>
 
+          <h2 class="title is-4" style="font-weight: 700;">Overview</h2>
+          <div class="content has-text-justified">
+            <p>
+              Perceiving and reconstructing 3D scene geometry from visual inputs is crucial for autonomous driving. 
+              However, it still lacks a driving-targeted dense geometry perception model that can adapt to different scenarios and camera configurations.
+              To bridge this gap, we propose a Driving Visual Geometry Transformer (<b>DVGT</b>), which reconstructs a global dense 3D point map from a sequence of unposed multi-view visual inputs.
+              We first extract visual features for each image using a DINO backbone, and employ alternating intra-view local attention, cross-view spatial attention, and cross-frame temporal attention to infer geometric relations across images.
+              We then use multiple heads to decode a global point map in the ego coordinate of the first frame and the ego poses for each frame.
+              Unlike conventional methods that rely on precise camera parameters, <b>DVGT</b> is free of explicit 3D geometric priors, enabling flexible processing of arbitrary camera configurations. 
+              <b>DVGT</b> directly predicts metric-scaled geometry from image sequences, eliminating the need for post-alignment with external sensors. 
+              Trained on a large mixture of driving datasets including nuScenes, OpenScene, Waymo, KITTI, and DDAD, <b>DVGT</b> significantly outperforms existing models on various scenarios.
+            </p>
+          </div>
+          <div class="content has-text-centered">
+            <img id="teaser-img" src="./resources/teaser.png" alt="Teaser">
+          </div>
+          <br>
+
+
+          <h2 class="title is-4" style="font-weight: 700;">Method</h2>
+          <div class="content has-text-justified">
+            <p>
+              DVGT leverages a DINO-pretrained ViT-L to tokenize input images, and augments them with learnable ego tokens for ego pose estimation. 
+              It then employs an alternating mechanism of intra-view local attention, cross-view spatial attention, and cross-frame temporal attention to effectively aggregate spatial-temporal features. 
+              Finally, a pose head regresses frame-wise ego poses, while a point map head decodes dense 3D point maps for each image.
+            </p>
+          </div>
+          <div class="content has-text-centered">
+            <img id="architecture-img" src="./resources/framework.png" alt="Architecture">
+          </div>
+          <br>
+
+          <h2 class="title is-4" style="font-weight: 700;">Experiments</h2>
+          <div class="content has-text-justified">
+            <p>
+              DVGT significantly outperforms existing models in both performance and efficiency across diverse scenarios. 
+              As detailed in the tables below, we provide a comprehensive quantitative evaluation covering 
+              <strong>3D point reconstruction</strong>, 
+              <strong>ray depth estimation</strong>, 
+              <strong>ego pose estimation</strong>, and 
+              <strong>depth prediction compared with LiDAR ground truth</strong>. 
+              Notably, our method demonstrates superior accuracy across all evaluated datasets on ray depth estimation (&delta; &lt; 1.25).
+            </p>
+          </div>
+          <div class="content has-text-centered">
+            <img id="experiments-img" src="./resources/experiments.jpg" alt="Experiments" style="width: 500px;">
+          </div>
+          <div class="content has-text-centered">
+            <img id="experiments-2-img" src="./resources/experiments_2.png" alt="Experiments_2">
+          </div>
+          <br>
+
 
         </div>
       </div>
@@ -455,22 +475,6 @@
       }</code></pre>
     </div>
   </section>
-
-  <section class="section" id="AuthorContributions">
-    <div class="container is-max-desktop content">
-      <h2 class="title is-4" style="font-weight: 700;">Author Contributions</h2>
-      <div class="content has-text-justified is-size-6">
-        <p>
-          <strong>W. Zheng</strong> conceived the original idea and designed the method. 
-          <strong>S. Zuo</strong> and <strong>Z. Xie</strong> were responsible for the implementation of the model and writing the manuscript. 
-          <strong>W. Zheng</strong> also contributed to the writing and revision of the paper. 
-          <strong>S. Xu</strong> participated in the method discussion, assisted in writing the manuscript, and provided computing resources jointly with <strong>F. Li</strong>, <strong>S. Jiang</strong>, and <strong>L. Chen</strong>.
-          <strong>Z. Yang</strong> and <strong>J. Lu</strong> supervised the project.
-        </p>
-      </div>
-    </div>
-  </section>
-
 
 
   <footer class="footer">
