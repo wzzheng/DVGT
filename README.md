@@ -247,3 +247,7 @@ If you find this project helpful, please consider citing the following paper:
   year={2026}
 }
 ```
+
+## License
+
+The code and pretrained weights of DVGT-2 are released under the Apache License 2.0.
